@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}दैनिक रिपोर्ट{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold">दैनिक रिपोर्ट</h1>
+        <a href="{{ url_for('reports.download_pdf', type='daily', date=date.isoformat()) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">PDF डाउनलोड करें</a>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="grid grid-cols-3 gap-6">
+            <div>
+                <p class="text-gray-600 text-sm">तारीख</p>
+                <p class="text-2xl font-bold">{{ date.strftime('%d-%m-%Y') }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600 text-sm">कुल सेवाएं</p>
+                <p class="text-2xl font-bold">{{ services|length }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600 text-sm">कुल आय</p>
+                <p class="text-2xl font-bold text-green-600">₹{{ "%.2f"|format(total_earnings) }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-bold mb-4">सेवाएं</h2>
+        
+        {% if services %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-100 border-b">
+                    <tr>
+                        <th class="px-4 py-2 text-left">ग्राहक</th>
+                        <th class="px-4 py-2 text-left">सेवा</th>
+                        <th class="px-4 py-2 text-left">राशि</th>
+                        <th class="px-4 py-2 text-left">स्थिति</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                    <tr class="border-b">
+                        <td class="px-4 py-2">{{ service.customer.full_name }}</td>
+                        <td class="px-4 py-2">{{ service.service_type }}</td>
+                        <td class="px-4 py-2">₹{{ service.payment_amount }}</td>
+                        <td class="px-4 py-2">{{ service.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-600">कोई सेवा नहीं है</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}सेवा विवरण{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl">
+        <div class="bg-white rounded-lg shadow p-8 mb-6">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold">{{ service.service_type }}</h1>
+                    <p class="text-gray-600">{{ service.customer.full_name }}</p>
+                </div>
+                <div>
+                    <select id="statusSelect" onchange="updateStatus({{ service.id }})" class="px-4 py-2 border border-gray-300 rounded-lg">
+                        {% for s in statuses %}
+                        <option value="{{ s }}" {% if service.status == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-6 mb-6">
+                <div>
+                    <h3 class="font-bold text-gray-700 mb-2">राशि</h3>
+                    <p class="text-2xl font-bold text-green-600">₹{{ service.payment_amount }}</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-700 mb-2">जमा तारीख</h3>
+                    <p class="text-gray-600">{{ service.submission_date.strftime('%d-%m-%Y') }}</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-700 mb-2">स्थिति</h3>
+                    <span class="px-3 py-1 rounded-full text-sm font-bold
+                        {% if service.status == 'Completed' %}bg-green-100 text-green-800
+                        {% elif service.status == 'Pending' %}bg-yellow-100 text-yellow-800
+                        {% elif service.status == 'Rejected' %}bg-red-100 text-red-800
+                        {% else %}bg-blue-100 text-blue-800{% endif %}">
+                        {{ service.status }}
+                    </span>
+                </div>
+            </div>
+            
+            {% if service.notes %}
+            <div class="pt-6 border-t">
+                <h3 class="font-bold text-gray-700 mb-2">नोट्स</h3>
+                <p class="text-gray-600">{{ service.notes }}</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Documents -->
+        <div class="bg-white rounded-lg shadow p-8 mb-6">
+            <h2 class="text-2xl font-bold mb-4">दस्तावेज़</h2>
+            
+            <div class="mb-6 p-4 border-2 border-dashed border-gray-300 rounded-lg">
+                <input type="file" id="fileInput" multiple class="hidden">
+                <button type="button" onclick="document.getElementById('fileInput').click()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">फाइल अपलोड करें</button>
+            </div>
+            
+            {% if documents %}
+            <div class="space-y-2">
+                {% for doc in documents %}
+                <div class="flex justify-between items-center p-3 border border-gray-200 rounded">
+                    <div>
+                        <p class="font-bold">{{ doc.document_type }}</p>
+                        <p class="text-sm text-gray-600">{{ doc.original_name }}</p>
+                    </div>
+                    <a href="{{ url_for('static', filename='uploads/' + doc.file_path) }}" class="text-blue-600 hover:text-blue-700" download>डाउनलोड</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-600">कोई दस्तावेज़ नहीं है</p>
+            {% endif %}
+        </div>
+        
+        <!-- Payments -->
+        <div class="bg-white rounded-lg shadow p-8">
+            <h2 class="text-2xl font-bold mb-4">भुगतान</h2>
+            
+            {% if payments %}
+            <table class="w-full">
+                <thead class="bg-gray-100 border-b">
+                    <tr>
+                        <th class="px-4 py-2 text-left">राशि</th>
+                        <th class="px-4 py-2 text-left">विधि</th>
+                        <th class="px-4 py-2 text-left">स्थिति</th>
+                        <th class="px-4 py-2 text-left">तारीख</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr class="border-b">
+                        <td class="px-4 py-2">₹{{ payment.amount }}</td>
+                        <td class="px-4 py-2">{{ payment.payment_method or '-' }}</td>
+                        <td class="px-4 py-2">{{ payment.status }}</td>
+                        <td class="px-4 py-2">{{ payment.created_at.strftime('%d-%m-%Y') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-gray-600">कोई भुगतान नहीं है</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function updateStatus(serviceId) {
+    const status = document.getElementById('statusSelect').value;
+    fetch(`/api/service/${serviceId}/status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: status })
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}

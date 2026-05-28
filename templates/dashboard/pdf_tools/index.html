@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}PDF उपकरण{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">PDF उपकरण</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer" onclick="location.href='{{ url_for('pdf_tools.image_resize') }}'">
+            <div class="text-4xl mb-3">🖼️</div>
+            <h3 class="text-xl font-bold mb-2">छवि आकार बदलें</h3>
+            <p class="text-gray-600 text-sm">छवि का आकार बदलें और संपीड़ित करें</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer" onclick="location.href='{{ url_for('pdf_tools.signature_resize') }}'">
+            <div class="text-4xl mb-3">✍️</div>
+            <h3 class="text-xl font-bold mb-2">हस्ताक्षर आकार बदलें</h3>
+            <p class="text-gray-600 text-sm">हस्ताक्षर को सही आकार में लाएं</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer" onclick="location.href='{{ url_for('pdf_tools.passport_photo') }}'">
+            <div class="text-4xl mb-3">📷</div>
+            <h3 class="text-xl font-bold mb-2">पासपोर्ट फोटो</h3>
+            <p class="text-gray-600 text-sm">पासपोर्ट फोटो मानकों के अनुसार तैयार करें</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer" onclick="location.href='{{ url_for('pdf_tools.pdf_merge') }}'">
+            <div class="text-4xl mb-3">📎</div>
+            <h3 class="text-xl font-bold mb-2">PDF मर्ज करें</h3>
+            <p class="text-gray-600 text-sm">कई PDF फाइलों को एक में मिलाएं</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer" onclick="location.href='{{ url_for('pdf_tools.pdf_compress') }}'">
+            <div class="text-4xl mb-3">📦</div>
+            <h3 class="text-xl font-bold mb-2">PDF संपीड़ित करें</h3>
+            <p class="text-gray-600 text-sm">PDF फाइल का आकार कम करें</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer">
+            <div class="text-4xl mb-3">🔜</div>
+            <h3 class="text-xl font-bold mb-2">अधिक आ रहा है</h3>
+            <p class="text-gray-600 text-sm">जल्द ही और उपकरण जोड़े जाएंगे</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

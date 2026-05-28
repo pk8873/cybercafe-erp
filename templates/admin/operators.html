@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}ऑपरेटर प्रबंधन{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">ऑपरेटर प्रबंधन</h1>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <form method="GET" class="flex gap-4">
+            <input type="text" name="search" placeholder="दुकान नाम, ईमेल खोजें..." value="{{ search }}" class="flex-1 px-4 py-2 border border-gray-300 rounded">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">खोजें</button>
+        </form>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="w-full">
+            <thead class="bg-gray-100 border-b">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-bold">दुकान नाम</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">ईमेल</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">स्थिति</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">कार्य</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for operator in operators.items %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-6 py-3">{{ operator.shop_name }}</td>
+                    <td class="px-6 py-3">{{ operator.email }}</td>
+                    <td class="px-6 py-3">
+                        {% if operator.is_active %}
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">सक्रिय</span>
+                        {% else %}
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800">निलंबित</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-3 text-sm space-y-1">
+                        {% if operator.is_active %}
+                        <form method="POST" action="{{ url_for('admin.suspend_operator', operator_id=operator.id) }}" class="inline">
+                            <button type="submit" class="text-orange-600 hover:text-orange-700">निलंबित करें</button>
+                        </form>
+                        {% else %}
+                        <form method="POST" action="{{ url_for('admin.activate_operator', operator_id=operator.id) }}" class="inline">
+                            <button type="submit" class="text-green-600 hover:text-green-700">सक्रिय करें</button>
+                        </form>
+                        {% endif %}
+                        <form method="POST" action="{{ url_for('admin.delete_operator', operator_id=operator.id) }}" class="inline" onsubmit="return confirm('क्या आप सुनिश्चित हैं?');">
+                            <button type="submit" class="text-red-600 hover:text-red-700 ml-2">हटाएं</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

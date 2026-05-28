@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}शिकायतें{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">शिकायत प्रबंधन</h1>
+    
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="w-full">
+            <thead class="bg-gray-100 border-b">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-bold">विषय</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">ऑपरेटर</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">स्थिति</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">कार्य</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for complaint in complaints.items %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-6 py-3">
+                        <p class="font-bold">{{ complaint.subject }}</p>
+                        <p class="text-sm text-gray-600 truncate">{{ complaint.message }}</p>
+                    </td>
+                    <td class="px-6 py-3">{{ complaint.operator.shop_name }}</td>
+                    <td class="px-6 py-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold 
+                            {% if complaint.status == 'Closed' %}bg-green-100 text-green-800
+                            {% elif complaint.status == 'In Progress' %}bg-yellow-100 text-yellow-800
+                            {% else %}bg-red-100 text-red-800{% endif %}">
+                            {{ complaint.status }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-3 text-sm">
+                        {% if complaint.status != 'Closed' %}
+                        <button onclick="openReplyModal({{ complaint.id }})" class="text-blue-600 hover:text-blue-700">जवाब दें</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Reply Modal -->
+<div id="replyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg p-8 max-w-md w-full">
+        <h2 class="text-2xl font-bold mb-4">जवाब दें</h2>
+        <form method="POST" id="replyForm">
+            <textarea name="reply" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"></textarea>
+            <div class="flex gap-2">
+                <button type="submit" class="flex-1 bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700">भेजें</button>
+                <button type="button" onclick="closeReplyModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg font-bold hover:bg-gray-400">रद्द करें</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openReplyModal(complaintId) {
+    document.getElementById('replyModal').classList.remove('hidden');
+    document.getElementById('replyForm').action = `{{ url_for('admin.reply_complaint', complaint_id=0) }}`.replace('0', complaintId);
+}
+
+function closeReplyModal() {
+    document.getElementById('replyModal').classList.add('hidden');
+}
+</script>
+{% endblock %}

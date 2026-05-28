@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}योजनाएं{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">सदस्यता योजनाएं</h1>
+    
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="w-full">
+            <thead class="bg-gray-100 border-b">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-bold">योजना नाम</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">मासिक</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">वार्षिक</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">कार्य</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plan in plans %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-6 py-3">
+                        <p class="font-bold">{{ plan.name }}</p>
+                        <p class="text-sm text-gray-600">{{ plan.description }}</p>
+                    </td>
+                    <td class="px-6 py-3">₹{{ plan.monthly_price }}</td>
+                    <td class="px-6 py-3">₹{{ plan.yearly_price }}</td>
+                    <td class="px-6 py-3 text-sm">
+                        <button onclick="editPlan({{ plan.id }})" class="text-blue-600 hover:text-blue-700">संपादित करें</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
