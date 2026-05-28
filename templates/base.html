@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}साइबर कैफे डिजिटल मैनेजर{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    {% if 'operator_id' in session %}
+    <nav class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-green-600">साइबर कैफे मैनेजर</h1>
+                <div class="flex items-center gap-4">
+                    <span class="text-gray-600">{{ session.get('shop_name', '') }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="text-red-600 hover:text-red-800">लॉगआउट</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% elif 'admin_id' in session %}
+    <nav class="bg-gray-900 text-white">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">एडमिन पैनल</h1>
+                <a href="{{ url_for('admin.admin_logout') }}" class="text-red-400 hover:text-red-600">लॉगआउट</a>
+            </div>
+        </div>
+    </nav>
+    {% else %}
+    <nav class="bg-green-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="{{ url_for('index') }}" class="text-2xl font-bold">साइबर कैफे मैनेजर</a>
+                <div class="flex gap-4">
+                    <a href="{{ url_for('index') }}" class="hover:text-green-100">होम</a>
+                    <a href="{{ url_for('about') }}" class="hover:text-green-100">परिचय</a>
+                    <a href="{{ url_for('pricing') }}" class="hover:text-green-100">मूल्य</a>
+                    <a href="{{ url_for('contact') }}" class="hover:text-green-100">संपर्क</a>
+                    <a href="{{ url_for('auth.login') }}" class="bg-white text-green-600 px-4 py-2 rounded hover:bg-green-50">लॉगिन</a>
+                    <a href="{{ url_for('auth.register') }}" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">रजिस्ट्रेशन</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="container mx-auto mt-4 px-4">
+                <div class="p-4 rounded {% if category == 'error' %}bg-red-100 text-red-700{% elif category == 'success' %}bg-green-100 text-green-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+                    {{ message }}
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold mb-4">के बारे में</h3>
+                    <ul class="text-gray-400 text-sm">
+                        <li><a href="{{ url_for('about') }}" class="hover:text-white">परिचय</a></li>
+                        <li><a href="{{ url_for('contact') }}" class="hover:text-white">संपर्क करें</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">कानूनी</h3>
+                    <ul class="text-gray-400 text-sm">
+                        <li><a href="{{ url_for('terms') }}" class="hover:text-white">शर्तें</a></li>
+                        <li><a href="{{ url_for('privacy') }}" class="hover:text-white">गोपनीयता</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">संपर्क</h3>
+                    <p class="text-gray-400 text-sm">Email: info@cybercafemanager.in</p>
+                    <p class="text-gray-400 text-sm">Phone: +91-XXXXXXXXXX</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2024 साइबर कैफे डिजिटल मैनेजर। सर्वाधिकार सुरक्षित।</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

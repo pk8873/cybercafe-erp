@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}रजिस्ट्रेशन - साइबर कैफे मैनेजर{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-center text-green-600 mb-6">नया खाता बनाएं</h2>
+        
+        <form method="POST" class="space-y-3">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">पूरा नाम</label>
+                <input type="text" name="full_name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">दुकान का नाम</label>
+                <input type="text" name="shop_name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">मोबाइल नंबर</label>
+                <input type="tel" name="mobile" required pattern="[0-9]{10}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">ईमेल</label>
+                <input type="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">जिला</label>
+                <select name="district" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                    <option value="">--जिला चुनें--</option>
+                    <option value="पटना">पटना</option>
+                    <option value="गया">गया</option>
+                    <option value="दरभंगा">दरभंगा</option>
+                    <option value="मुजफ्फरपुर">मुजफ्फरपुर</option>
+                    <option value="समस्तीपुर">समस्तीपुर</option>
+                    <option value="बेगूसराय">बेगूसराय</option>
+                    <option value="नालंदा">नालंदा</option>
+                    <option value="अरवल">अरवल</option>
+                    <option value="जहानाबाद">जहानाबाद</option>
+                    <option value="नवादा">नवादा</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">पता</label>
+                <textarea name="address" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">पासवर्ड</label>
+                <input type="password" name="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">पासवर्ड की पुष्टि करें</label>
+                <input type="password" name="confirm_password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+            </div>
+            
+            <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition">रजिस्टर करें</button>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">पहले से खाता है? <a href="{{ url_for('auth.login') }}" class="text-green-600 hover:text-green-700 font-bold">लॉगिन करें</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}होम - साइबर कैफे डिजिटल मैनेजर{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-green-600 text-white py-20">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl">
+            <h1 class="text-5xl font-bold mb-6">साइबर कैफे डिजिटल मैनेजर</h1>
+            <p class="text-xl mb-8">बिहार के साइबर कैफे, CSC सेंटर, और ऑनलाइन फॉर्म दुकानों के लिए आधुनिक ERP समाधान</p>
+            <div class="flex gap-4">
+                <a href="{{ url_for('auth.register') }}" class="bg-white text-green-600 px-8 py-3 rounded-lg font-bold hover:bg-green-50">फ्री ट्राई शुरू करें</a>
+                <a href="{{ url_for('pricing') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700">मूल्य देखें</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-12">मुख्य सुविधाएं</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-6 border rounded-lg hover:shadow-lg transition">
+                <div class="text-4xl mb-4">👥</div>
+                <h3 class="text-xl font-bold mb-2">ग्राहक प्रबंधन</h3>
+                <p class="text-gray-600">सभी ग्राहकों के रिकॉर्ड को आसानी से प्रबंधित करें और ट्रैक करें।</p>
+            </div>
+            <div class="p-6 border rounded-lg hover:shadow-lg transition">
+                <div class="text-4xl mb-4">📋</div>
+                <h3 class="text-xl font-bold mb-2">सेवा ट्रैकिंग</h3>
+                <p class="text-gray-600">आय प्रमाण, जाति प्रमाण, और अन्य सेवाओं को ट्रैक करें।</p>
+            </div>
+            <div class="p-6 border rounded-lg hover:shadow-lg transition">
+                <div class="text-4xl mb-4">📊</div>
+                <h3 class="text-xl font-bold mb-2">रिपोर्ट और विश्लेषण</h3>
+                <p class="text-gray-600">दैनिक, साप्ताहिक और मासिक आय रिपोर्ट देखें।</p>
+            </div>
+            <div class="p-6 border rounded-lg hover:shadow-lg transition">
+                <div class="text-4xl mb-4">🔧</div>
+                <h3 class="text-xl font-bold mb-2">PDF उपकरण</h3>
+                <p class="text-gray-600">फोटो, हस्ताक्षर, और अन्य दस्तावेजों को संपादित करें।</p>
+            </div>
+            <div class="p-6 border rounded-lg hover:shadow-lg transition">
+                <div class="text-4xl mb-4">📱</div>
+                <h3 class="text-xl font-bold mb-2">मोबाइल फ्रेंडली</h3>
+                <p class="text-gray-600">किसी भी डिवाइस से काम करें, पूरी तरह से responsive।</p>
+            </div>
+            <div class="p-6 border rounded-lg hover:shadow-lg transition">
+                <div class="text-4xl mb-4">🔒</div>
+                <h3 class="text-xl font-bold mb-2">सुरक्षित</h3>
+                <p class="text-gray-600">आपके सभी डेटा एन्क्रिप्ट और सुरक्षित हैं।</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Us Section -->
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-12">हमें क्यों चुनें?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+                <h3 class="text-2xl font-bold mb-4">✅ बिहार के लिए डिज़ाइन किया गया</h3>
+                <p class="text-gray-600 mb-6">हमारा सॉफ्टवेयर बिहार के साइबर कैफे ऑपरेटरों की जरूरतों को समझता है।</p>
+                
+                <h3 class="text-2xl font-bold mb-4">✅ हिंदी समर्थन</h3>
+                <p class="text-gray-600 mb-6">पूरा इंटरफेस हिंदी में उपलब्ध है।</p>
+                
+                <h3 class="text-2xl font-bold mb-4">✅ कम इंटरनेट में काम करता है</h3>
+                <p class="text-gray-600 mb-6">कम गति के इंटरनेट पर भी तेज़ी से काम करता है।</p>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold mb-4">✅ आसान उपयोग</h3>
+                <p class="text-gray-600 mb-6">कोई तकनीकी ज्ञान की जरूरत नहीं, कोई भी इस्तेमाल कर सकता है।</p>
+                
+                <h3 class="text-2xl font-bold mb-4">✅ 24/7 समर्थन</h3>
+                <p class="text-gray-600 mb-6">हमारी सहायक टीम हमेशा आपकी मदद के लिए तैयार है।</p>
+                
+                <h3 class="text-2xl font-bold mb-4">✅ सस्ता मूल्य</h3>
+                <p class="text-gray-600 mb-6">प्रतিस्पर्धी और किफायती मूल्य पर पूरा समाधान।</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-green-600 text-white py-16">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-4">अभी शुरू करें</h2>
+        <p class="text-xl mb-8">14 दिन के लिए बिना कोई क्रेडिट कार्ड के फ्री ट्राई करें</p>
+        <a href="{{ url_for('auth.register') }}" class="bg-white text-green-600 px-8 py-3 rounded-lg font-bold hover:bg-green-50 inline-block">अभी साइन अप करें</a>
+    </div>
+</section>
+{% endblock %}

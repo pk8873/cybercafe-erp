@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}ग्राहक - साइबर कैफे मैनेजर{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">ग्राहक प्रबंधन</h1>
+        <a href="{{ url_for('customer.add') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">+ नया ग्राहक</a>
+    </div>
+    
+    <!-- Search -->
+    <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <form method="GET" class="flex gap-4">
+            <input type="text" name="search" placeholder="नाम, मोबाइल या आधार खोजें..." value="{{ search }}" class="flex-1 px-4 py-2 border border-gray-300 rounded">
+            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">खोजें</button>
+        </form>
+    </div>
+    
+    <!-- Customers Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="w-full">
+            <thead class="bg-gray-100 border-b">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-bold">नाम</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">मोबाइल</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">आधार अंतिम 4</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">गांव</th>
+                    <th class="px-6 py-3 text-left text-sm font-bold">क्रिया</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers.items %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-6 py-3">{{ customer.full_name }}</td>
+                    <td class="px-6 py-3">{{ customer.mobile }}</td>
+                    <td class="px-6 py-3">{{ customer.aadhaar_last4 or '-' }}</td>
+                    <td class="px-6 py-3">{{ customer.village or '-' }}</td>
+                    <td class="px-6 py-3 text-sm">
+                        <a href="{{ url_for('customer.view', customer_id=customer.id) }}" class="text-blue-600 hover:text-blue-700">देखें</a>
+                        <a href="{{ url_for('customer.edit', customer_id=customer.id) }}" class="text-green-600 hover:text-green-700 ml-2">संपादित करें</a>
+                        <form method="POST" action="{{ url_for('customer.delete', customer_id=customer.id) }}" class="inline">
+                            <button type="submit" onclick="return confirm('क्या आप निश्चित हैं?')" class="text-red-600 hover:text-red-700 ml-2">हटाएं</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    {% if customers.pages > 1 %}
+    <div class="mt-6 flex justify-center gap-2">
+        {% for page_num in customers.iter_pages() %}
+            {% if page_num %}
+                {% if page_num == customers.page %}
+                    <span class="px-4 py-2 bg-green-600 text-white rounded">{{ page_num }}</span>
+                {% else %}
+                    <a href="{{ url_for('customer.index', page=page_num, search=search) }}" class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">{{ page_num }}</a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
