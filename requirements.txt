@@ -5,7 +5,7 @@ Werkzeug==3.0.1
 python-dotenv==1.0.0
 Pillow==11.0.0
 PyPDF2==3.0.1
-ReportLab==4.1.1
+ReportLab==4.0.9
 click==8.1.7
 Gunicorn==23.0.0
 WhiteNoise==6.6.0
