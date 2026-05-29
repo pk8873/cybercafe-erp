@@ -3,17 +3,15 @@ services:
     name: cybercafe-erp
     runtime: python
     pythonVersion: 3.11
-    buildCommand: pip install -r requirements.txt && flask db upgrade
+    buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
       - key: FLASK_ENV
         value: production
       - key: PYTHON_VERSION
         value: 3.11.0
-    disk:
-      name: cybercafe_db
-      mountPath: /var/lib/postgresql
-      sizeGB: 10
+      - key: PYTHONUNBUFFERED
+        value: 'true'
 
 databases:
   - name: cybercafe_db
