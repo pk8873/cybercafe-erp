@@ -1,96 +1,109 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}होम - साइबर कैफे डिजिटल मैनेजर{% endblock %}
+{% block title %}होम - साइबर कैफे मैनेजर{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="bg-green-600 text-white py-20">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl">
-            <h1 class="text-5xl font-bold mb-6">साइबर कैफे डिजिटल मैनेजर</h1>
-            <p class="text-xl mb-8">बिहार के साइबर कैफे, CSC सेंटर, और ऑनलाइन फॉर्म दुकानों के लिए आधुनिक ERP समाधान</p>
-            <div class="flex gap-4">
-                <a href="{{ url_for('auth.register') }}" class="bg-white text-green-600 px-8 py-3 rounded-lg font-bold hover:bg-green-50">फ्री ट्राई शुरू करें</a>
-                <a href="{{ url_for('pricing') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700">मूल्य देखें</a>
-            </div>
+<div class="grid md:grid-cols-2 gap-8 mb-12">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-6 md:p-8 shadow-lg">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">साइबर कैफे डिजिटल मैनेजर</h1>
+        <p class="text-base md:text-lg mb-6">बिहार के साइबर कैफे, CSC सेंटर और ऑनलाइन फॉर्म दुकानों के लिए पूर्ण प्रबंधन समाधान।</p>
+        <div class="flex gap-4 flex-wrap">
+            {% if not session.get('operator_id') %}
+                <a href="{{ url_for('auth.register') }}" class="bg-white text-green-600 px-6 py-3 rounded font-bold hover:bg-gray-100 text-sm md:text-base">अभी शुरू करें</a>
+                <a href="{{ url_for('auth.login') }}" class="bg-yellow-400 text-gray-800 px-6 py-3 rounded font-bold hover:bg-yellow-500 text-sm md:text-base">लॉगिन करें</a>
+            {% else %}
+                <a href="{{ url_for('dashboard.index') }}" class="bg-white text-green-600 px-6 py-3 rounded font-bold hover:bg-gray-100 text-sm md:text-base">डैशबोर्ड जाएं</a>
+            {% endif %}
         </div>
     </div>
-</section>
 
-<!-- Features Section -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold text-center mb-12">मुख्य सुविधाएं</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="p-6 border rounded-lg hover:shadow-lg transition">
-                <div class="text-4xl mb-4">👥</div>
-                <h3 class="text-xl font-bold mb-2">ग्राहक प्रबंधन</h3>
-                <p class="text-gray-600">सभी ग्राहकों के रिकॉर्ड को आसानी से प्रबंधित करें और ट्रैक करें।</p>
-            </div>
-            <div class="p-6 border rounded-lg hover:shadow-lg transition">
-                <div class="text-4xl mb-4">📋</div>
-                <h3 class="text-xl font-bold mb-2">सेवा ट्रैकिंग</h3>
-                <p class="text-gray-600">आय प्रमाण, जाति प्रमाण, और अन्य सेवाओं को ट्रैक करें।</p>
-            </div>
-            <div class="p-6 border rounded-lg hover:shadow-lg transition">
-                <div class="text-4xl mb-4">📊</div>
-                <h3 class="text-xl font-bold mb-2">रिपोर्ट और विश्लेषण</h3>
-                <p class="text-gray-600">दैनिक, साप्ताहिक और मासिक आय रिपोर्ट देखें।</p>
-            </div>
-            <div class="p-6 border rounded-lg hover:shadow-lg transition">
-                <div class="text-4xl mb-4">🔧</div>
-                <h3 class="text-xl font-bold mb-2">PDF उपकरण</h3>
-                <p class="text-gray-600">फोटो, हस्ताक्षर, और अन्य दस्तावेजों को संपादित करें।</p>
-            </div>
-            <div class="p-6 border rounded-lg hover:shadow-lg transition">
-                <div class="text-4xl mb-4">📱</div>
-                <h3 class="text-xl font-bold mb-2">मोबाइल फ्रेंडली</h3>
-                <p class="text-gray-600">किसी भी डिवाइस से काम करें, पूरी तरह से responsive।</p>
-            </div>
-            <div class="p-6 border rounded-lg hover:shadow-lg transition">
-                <div class="text-4xl mb-4">🔒</div>
-                <h3 class="text-xl font-bold mb-2">सुरक्षित</h3>
-                <p class="text-gray-600">आपके सभी डेटा एन्क्रिप्ट और सुरक्षित हैं।</p>
-            </div>
+    <!-- Features -->
+    <div class="grid grid-cols-1 gap-4">
+        <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
+            <i class="fas fa-users text-green-600 text-2xl mb-2"></i>
+            <h3 class="font-bold text-lg mb-2">ग्राहक प्रबंधन</h3>
+            <p class="text-gray-600 text-sm">सभी ग्राहक विवरण एक स्थान पर रखें</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
+            <i class="fas fa-cogs text-blue-600 text-2xl mb-2"></i>
+            <h3 class="font-bold text-lg mb-2">सेवा ट्रैकिंग</h3>
+            <p class="text-gray-600 text-sm">आय प्रमाण पत्र से पासपोर्ट तक सभी सेवाएं</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
+            <i class="fas fa-file-pdf text-red-600 text-2xl mb-2"></i>
+            <h3 class="font-bold text-lg mb-2">PDF उपकरण</h3>
+            <p class="text-gray-600 text-sm">तस्वीर क्रॉप, विलय, संपीड़न आदि</p>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Why Us Section -->
-<section class="py-20 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold text-center mb-12">हमें क्यों चुनें?</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div>
-                <h3 class="text-2xl font-bold mb-4">✅ बिहार के लिए डिज़ाइन किया गया</h3>
-                <p class="text-gray-600 mb-6">हमारा सॉफ्टवेयर बिहार के साइबर कैफे ऑपरेटरों की जरूरतों को समझता है।</p>
-                
-                <h3 class="text-2xl font-bold mb-4">✅ हिंदी समर्थन</h3>
-                <p class="text-gray-600 mb-6">पूरा इंटरफेस हिंदी में उपलब्ध है।</p>
-                
-                <h3 class="text-2xl font-bold mb-4">✅ कम इंटरनेट में काम करता है</h3>
-                <p class="text-gray-600 mb-6">कम गति के इंटरनेट पर भी तेज़ी से काम करता है।</p>
-            </div>
-            <div>
-                <h3 class="text-2xl font-bold mb-4">✅ आसान उपयोग</h3>
-                <p class="text-gray-600 mb-6">कोई तकनीकी ज्ञान की जरूरत नहीं, कोई भी इस्तेमाल कर सकता है।</p>
-                
-                <h3 class="text-2xl font-bold mb-4">✅ 24/7 समर्थन</h3>
-                <p class="text-gray-600 mb-6">हमारी सहायक टीम हमेशा आपकी मदद के लिए तैयार है।</p>
-                
-                <h3 class="text-2xl font-bold mb-4">✅ सस्ता मूल्य</h3>
-                <p class="text-gray-600 mb-6">प्रतিस्पर्धी और किफायती मूल्य पर पूरा समाधान।</p>
-            </div>
+<!-- Services Section -->
+<div class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-12">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">हमारी सेवाएं</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="border-l-4 border-green-600 pl-4 py-2">
+            <h4 class="font-bold text-lg mb-2">आय प्रमाण पत्र</h4>
+            <p class="text-gray-600 text-sm">सरकारी आय प्रमाण पत्र के लिए ऑनलाइन फॉर्म भरने में सहायता</p>
+        </div>
+        <div class="border-l-4 border-green-600 pl-4 py-2">
+            <h4 class="font-bold text-lg mb-2">जाति प्रमाण पत्र</h4>
+            <p class="text-gray-600 text-sm">आधिकारिक जाति प्रमाण पत्र के लिए आवेदन</p>
+        </div>
+        <div class="border-l-4 border-green-600 pl-4 py-2">
+            <h4 class="font-bold text-lg mb-2">निवास प्रमाण पत्र</h4>
+            <p class="text-gray-600 text-sm">निवास प्रमाण पत्र के लिए पूर्ण सहायता</p>
+        </div>
+        <div class="border-l-4 border-blue-600 pl-4 py-2">
+            <h4 class="font-bold text-lg mb-2">आधार प्रिंट</h4>
+            <p class="text-gray-600 text-sm">आधार कार्ड प्रिंटिंग और सहेजना</p>
+        </div>
+        <div class="border-l-4 border-blue-600 pl-4 py-2">
+            <h4 class="font-bold text-lg mb-2">लेमिनेशन</h4>
+            <p class="text-gray-600 text-sm">दस्तावेजों को सुरक्षित और टिकाऊ बनाएं</p>
+        </div>
+        <div class="border-l-4 border-blue-600 pl-4 py-2">
+            <h4 class="font-bold text-lg mb-2">फोटो प्रिंट</h4>
+            <p class="text-gray-600 text-sm">उच्च गुणवत्ता के फोटो प्रिंट सेवा</p>
         </div>
     </div>
-</section>
+</div>
 
-<!-- CTA Section -->
-<section class="bg-green-600 text-white py-16">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold mb-4">अभी शुरू करें</h2>
-        <p class="text-xl mb-8">14 दिन के लिए बिना कोई क्रेडिट कार्ड के फ्री ट्राई करें</p>
-        <a href="{{ url_for('auth.register') }}" class="bg-white text-green-600 px-8 py-3 rounded-lg font-bold hover:bg-green-50 inline-block">अभी साइन अप करें</a>
+<!-- Pricing Section -->
+<div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 md:p-8 mb-12">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">हमारी योजनाएं</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+            <h3 class="text-xl font-bold mb-2 text-green-600">मुफ्त परीक्षण</h3>
+            <p class="text-3xl font-bold mb-4 text-gray-800">₹0<span class="text-sm text-gray-600">/महीना</span></p>
+            <ul class="space-y-2 mb-6">
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>100 ग्राहक</li>
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>1000 सेवाएं</li>
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>30 दिन की अवधि</li>
+            </ul>
+            <a href="{{ url_for('auth.register') }}" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700">शुरू करें</a>
+        </div>
+        <div class="bg-white rounded-lg shadow-lg p-6 border-2 border-green-600 hover:shadow-xl transition">
+            <div class="bg-green-600 text-white text-center py-2 rounded mb-4 text-sm font-bold">लोकप्रिय</div>
+            <h3 class="text-xl font-bold mb-2 text-green-600">मासिक</h3>
+            <p class="text-3xl font-bold mb-4 text-gray-800">₹499<span class="text-sm text-gray-600">/महीना</span></p>
+            <ul class="space-y-2 mb-6">
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>असीमित ग्राहक</li>
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>असीमित सेवाएं</li>
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>24/7 समर्थन</li>
+            </ul>
+            <a href="{{ url_for('auth.register') }}" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700">शुरू करें</a>
+        </div>
+        <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+            <h3 class="text-xl font-bold mb-2 text-green-600">वार्षिक</h3>
+            <p class="text-3xl font-bold mb-4 text-gray-800">₹4,999<span class="text-sm text-gray-600">/वर्ष</span></p>
+            <ul class="space-y-2 mb-6">
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>असीमित सब कुछ</li>
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>30% बचत</li>
+                <li class="text-sm"><i class="fas fa-check text-green-600 mr-2"></i>प्राथमिकता समर्थन</li>
+            </ul>
+            <a href="{{ url_for('auth.register') }}" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700">शुरू करें</a>
+        </div>
     </div>
-</section>
+</div>
 {% endblock %}

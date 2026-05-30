@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}ग्राहकों की सूची - साइबर कैफे मैनेजर{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center flex-wrap gap-4">
+    <h1 class="text-3xl font-bold">ग्राहकों की सूची</h1>
+    <a href="{{ url_for('customer.add') }}" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700">
+        <i class="fas fa-plus mr-2"></i>नया ग्राहक
+    </a>
+</div>
+
+{% if customers %}
+<div class="bg-white rounded-lg shadow-lg overflow-x-auto">
+    <table class="w-full">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="px-4 py-3 text-left font-bold">नाम</th>
+                <th class="px-4 py-3 text-left font-bold">मोबाइल</th>
+                <th class="px-4 py-3 text-left font-bold">जिला</th>
+                <th class="px-4 py-3 text-left font-bold">क्रियाएं</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-3">{{ customer.full_name }}</td>
+                <td class="px-4 py-3">{{ customer.mobile }}</td>
+                <td class="px-4 py-3">{{ customer.district }}</td>
+                <td class="px-4 py-3 flex gap-2">
+                    <a href="{{ url_for('customer.edit', id=customer.id) }}" class="text-blue-600 hover:underline text-sm">संपादित करें</a>
+                    <a href="{{ url_for('customer.delete', id=customer.id) }}" class="text-red-600 hover:underline text-sm" onclick="return confirm('क्या आप सुनिश्चित हैं?')">हटाएं</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="bg-white rounded-lg shadow-lg p-8 text-center">
+    <p class="text-gray-600 text-lg mb-4">कोई ग्राहक नहीं मिला</p>
+    <a href="{{ url_for('customer.add') }}" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700">
+        पहला ग्राहक जोड़ें
+    </a>
+</div>
+{% endif %}
+{% endblock %}

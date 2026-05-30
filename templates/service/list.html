@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}सेवाओं की सूची - साइबर कैफे मैनेजर{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center flex-wrap gap-4">
+    <h1 class="text-3xl font-bold">सेवाओं की सूची</h1>
+    <a href="{{ url_for('service.add') }}" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700">
+        <i class="fas fa-plus mr-2"></i>नई सेवा
+    </a>
+</div>
+
+{% if services %}
+<div class="bg-white rounded-lg shadow-lg overflow-x-auto">
+    <table class="w-full">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="px-4 py-3 text-left font-bold">ग्राहक</th>
+                <th class="px-4 py-3 text-left font-bold">सेवा प्रकार</th>
+                <th class="px-4 py-3 text-left font-bold">राशि</th>
+                <th class="px-4 py-3 text-left font-bold">स्थिति</th>
+                <th class="px-4 py-3 text-left font-bold">क्रियाएं</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-3">{{ service.customer.full_name }}</td>
+                <td class="px-4 py-3">{{ service.service_type }}</td>
+                <td class="px-4 py-3">₹{{ service.payment_amount }}</td>
+                <td class="px-4 py-3">
+                    {% if service.status == 'Pending' %}
+                        <span class="bg-orange-200 text-orange-800 px-2 py-1 rounded text-sm">लंबित</span>
+                    {% elif service.status == 'Completed' %}
+                        <span class="bg-green-200 text-green-800 px-2 py-1 rounded text-sm">पूर्ण</span>
+                    {% else %}
+                        <span class="bg-blue-200 text-blue-800 px-2 py-1 rounded text-sm">{{ service.status }}</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3 flex gap-2">
+                    <a href="{{ url_for('service.edit', id=service.id) }}" class="text-blue-600 hover:underline text-sm">संपादित</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="bg-white rounded-lg shadow-lg p-8 text-center">
+    <p class="text-gray-600 text-lg mb-4">कोई सेवा नहीं मिली</p>
+    <a href="{{ url_for('service.add') }}" class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700">
+        पहली सेवा जोड़ें
+    </a>
+</div>
+{% endif %}
+{% endblock %}

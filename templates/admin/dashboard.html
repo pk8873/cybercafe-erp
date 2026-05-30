@@ -1,54 +1,30 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}एडमिन डैशबोर्ड{% endblock %}
+{% block title %}एडमिन डैशबोर्ड - साइबर कैफे मैनेजर{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">एडमिन डैशबोर्ड</h1>
-    
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="text-gray-500 text-sm font-medium">कुल ऑपरेटर</div>
-            <div class="text-3xl font-bold text-blue-600">{{ stats.total_operators }}</div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="text-gray-500 text-sm font-medium">सक्रिय ऑपरेटर</div>
-            <div class="text-3xl font-bold text-green-600">{{ stats.active_operators }}</div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="text-gray-500 text-sm font-medium">कुल ग्राहक</div>
-            <div class="text-3xl font-bold text-purple-600">{{ stats.total_customers }}</div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="text-gray-500 text-sm font-medium">कुल आय</div>
-            <div class="text-3xl font-bold text-orange-600">₹{{ "%.2f"|format(stats.total_revenue) }}</div>
-        </div>
+<h1 class="text-3xl md:text-4xl font-bold mb-8 text-red-600">एडमिन डैशबोर्ड</h1>
+
+<div class="grid md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg">
+        <p class="text-sm opacity-90">कुल ऑपरेटर</p>
+        <p class="text-3xl font-bold">{{ total_operators }}</p>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-xl font-bold mb-4">प्रबंधन</h3>
-            <ul class="space-y-2">
-                <li><a href="{{ url_for('admin.manage_operators') }}" class="text-blue-600 hover:text-blue-700">ऑपरेटर प्रबंधन</a></li>
-                <li><a href="{{ url_for('admin.manage_complaints') }}" class="text-blue-600 hover:text-blue-700">शिकायतें</a></li>
-                <li><a href="{{ url_for('admin.manage_plans') }}" class="text-blue-600 hover:text-blue-700">योजनाएं</a></li>
-            </ul>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-xl font-bold mb-4">आज की आय</h3>
-            <div class="text-3xl font-bold text-green-600">₹{{ "%.2f"|format(stats.today_revenue) }}</div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-xl font-bold mb-4">त्वरित विकल्प</h3>
-            <ul class="space-y-2 text-sm">
-                <li><a href="{{ url_for('admin.admin_logout') }}" class="text-red-600 hover:text-red-700">लॉगआउट</a></li>
-            </ul>
-        </div>
+    <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg">
+        <p class="text-sm opacity-90">सक्रिय ऑपरेटर</p>
+        <p class="text-3xl font-bold">{{ active_operators }}</p>
     </div>
+    
+    <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow-lg">
+        <p class="text-sm opacity-90">कुल राजस्व</p>
+        <p class="text-3xl font-bold">₹{{ total_revenue|int }}</p>
+    </div>
+</div>
+
+<div class="flex gap-4 flex-wrap">
+    <a href="{{ url_for('admin.logout') }}" class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-700">
+        लॉगआउट
+    </a>
 </div>
 {% endblock %}
