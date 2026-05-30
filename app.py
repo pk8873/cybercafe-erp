@@ -15,23 +15,33 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', secrets.token_hex(32))
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://arcade_hub_db_005a_user:1eFI2CcvxvhXrdzMiTh8y9Ap2l8jdhIo@dpg-d876pqt7vvec738o5r10-a/arcade_hub_db_005a')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Create upload folder if it doesn't exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Import models
+# Import models AFTER db is created
 from models import Operator, Customer, Service, Payment, Notification, Plan, Complaint, AdminLog, Document, Receipt
 
 # Import blueprints
-from routes import auth_bp, dashboard_bp, customer_bp, service_bp, admin_bp, pdf_tools_bp, reports_bp, api_bp
+from routes.auth import auth_bp
+from routes.dashboard import dashboard_bp
+from routes.customer import customer_bp
+from routes.service import service_bp
+from routes.admin import admin_bp
+from routes.pdf_tools import pdf_tools_bp
+from routes.reports import reports_bp
+from routes.api import api_bp
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(dashboard_bp)
@@ -45,16 +55,21 @@ app.register_blueprint(api_bp)
 # Error handlers
 @app.errorhandler(404)
 def not_found(error):
+    logger.error(f'404 Error: {error}')
     return render_template('errors/404.html'), 404
 
 @app.errorhandler(500)
 def server_error(error):
-    db.session.rollback()
-    logger.error(f'Server error: {error}')
-    return render_template('errors/500.html'), 500
+    try:
+        db.session.rollback()
+    except:
+        pass
+    logger.error(f'500 Server Error: {str(error)}', exc_info=True)
+    return render_template('errors/500.html', error=str(error)), 500
 
 @app.errorhandler(403)
 def forbidden(error):
+    logger.error(f'403 Forbidden: {error}')
     return render_template('errors/403.html'), 403
 
 # Home route
@@ -70,22 +85,29 @@ def about():
 # Pricing page
 @app.route('/pricing')
 def pricing():
-    plans = Plan.query.filter_by(active=True).all()
-    return render_template('pricing.html', plans=plans)
+    try:
+        plans = Plan.query.filter_by(active=True).all()
+        return render_template('pricing.html', plans=plans)
+    except Exception as e:
+        logger.error(f'Pricing page error: {e}')
+        return render_template('pricing.html', plans=[])
 
 # Contact page
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        message = request.form.get('message')
-        phone = request.form.get('phone')
-        
-        # Log contact message (can be extended to email notification)
-        logger.info(f'Contact: {name} ({email}) - {message}')
-        flash('आपका संदेश भेज दिया गया। धन्यवाद!', 'success')
-        return redirect(url_for('contact'))
+        try:
+            name = request.form.get('name')
+            email = request.form.get('email')
+            message = request.form.get('message')
+            phone = request.form.get('phone')
+            
+            logger.info(f'Contact: {name} ({email}) - {message}')
+            flash('आपका संदेश भेज दिया गया। धन्यवाद!', 'success')
+            return redirect(url_for('contact'))
+        except Exception as e:
+            logger.error(f'Contact form error: {e}')
+            flash('संदेश भेजने में त्रुटि।', 'error')
     
     return render_template('contact.html')
 
@@ -104,14 +126,18 @@ def terms():
 def privacy():
     return render_template('privacy.html')
 
-# Health check for deployment
+# Health check
 @app.route('/health')
 def health():
     return jsonify({'status': 'healthy'}), 200
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+            logger.info('Database tables created/verified')
+        except Exception as e:
+            logger.error(f'Database creation error: {e}')
     
     debug_mode = os.getenv('FLASK_ENV') == 'development'
     app.run(debug=debug_mode, host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
