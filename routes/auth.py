@@ -10,35 +10,11 @@ logger = logging.getLogger(__name__)
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 BIHAR_DISTRICTS = [
-    'अरारिया', 'अरवल', 'औरंगाबाद', 'बाँका', 'बारां', 'बारिपुर', 'बेतिया', 'बिहार शरीफ',
-    'भागलपुर', 'बिक्रमगंज', 'बिंदु', 'बोधगया', 'बिहारीगंज', 'चम्पारण', 'छपरा', 'दरभंगा',
-    'डेहरी ऑन सोन', 'देव', 'धनबाद', 'दिलदारनगर', 'दिल्लीपुर', 'दिमापुर', 'दीक्षा',
-    'गंगा पार', 'गया', 'गोपालगंज', 'हजारीबाग', 'हसन', 'हाजीपुर', 'हिमाचल', 'जमालपुर',
-    'जनकपुर', 'जहानाबाद', 'जलालपुर', 'जलेश्वर', 'जमुई', 'जयनगर', 'जयपुरघाट', 'जेतपुर',
-    'खगड़िया', 'खीरा', 'कटिहार', 'किशनगंज', 'कोडरमा', 'कुमारहट', 'लखीसराय', 'लक्षद्वीप',
-    'लालगंज', 'लक्ष्मी नारायण पुर', 'मधेपुरा', 'मधुबनी', 'महिषा', 'मैनपुरी', 'मखदुमपुर',
-    'मालदा', 'मामलपुर', 'मुंगेर', 'मुज़फ़्फ़रपुर', 'मेहसी', 'मेहता', 'मिथिलांचल', 'मिथिला',
-    'मो. आरपुर', 'मुसलमपुर', 'मोतिहारी', 'मोहनीया', 'नई दिल्ली', 'नवादा', 'नार्थ 24 परगना',
-    'नवीनगर', 'नयानगर', 'नलंदा', 'नेवादा', 'नेवाड़ी', 'नीलांचल', 'पटना', 'पटारी', 'पटेल',
-    'पंडारी', 'पंडौल', 'पापली', 'पसरई', 'पिपिली', 'पीरो', 'पोखरवा', 'पूर्ब चंपारण', 'पूर्णिया',
-    'पूसा', 'रघुनाथपुर', 'राजपुर', 'रामपुर', 'रामपुरवा', 'रामसरी', 'राणा', 'रांची', 'रांगली',
-    'रातू', 'रायगंज', 'रेवती', 'रिसुआ', 'रोहतास', 'साकरी', 'सकरी', 'सलेमपुर', 'सांतान',
-    'सपौल', 'सारण', 'सास्टी', 'सातपुरा', 'सेखपुरा', 'सेमरी', 'सेमरीमास', 'सेनुआर', 'शाहपुर',
-    'शांतिनगर', 'शेरघाटी', 'शेरपुर', 'शिमला', 'शिवपालपुर', 'शिवहर', 'शोहरतगड़', 'सिमरिया',
-    'सिमरिया खुर्द', 'सिमरीमास', 'सिमरीया', 'सिमुलतला', 'सिंघुआ', 'सिंघुआ पूर', 'सिंघुआ पश्चिम',
-    'सिंहभूम', 'सिंहपुर', 'सिराज', 'सिरसिया', 'सिसवां', 'सितामढ़ी', 'सीतामरही', 'सीतामारी',
-    'सीतामरी', 'सीतापुर', 'सीवान', 'सोन', 'सोनपुर', 'सोनारंजन', 'सोरी', 'सुकारी', 'सुकेत',
-    'सुल्तान', 'सुल्तानपुर', 'सुल्तानपुरा', 'सुमारी', 'सुमारी दक्षिण', 'सुमारी पूर्व', 'सुमारी पश्चिम',
-    'सुमारी उत्तर', 'सुमेरपुर', 'सुमेरपुरा', 'सुमेरिया', 'सुमैर', 'सुमैरा', 'सुहुलपुरा', 'सुहुलपुरी',
-    'सुहुलपुरीया', 'सुहुलदास', 'सुहुलदि', 'सुहुलहाजी', 'सुहुलहाली', 'सुहुलहा', 'सुहुलिया',
-    'सुहुलिई', 'सुहुलिया', 'सुहुले', 'सुहुलेश्वर', 'सुहुलिया', 'सुहुलह', 'सुहुलदी', 'सुहुलदू',
-    'सुहुलदे', 'सुहुलदै', 'सुहुलदो', 'सुहुलदी', 'सुहुली', 'सुहुलू', 'सुहुलि', 'सुहुलु',
-    'सुहुला', 'सुहुली', 'सुहुले', 'सुहुलै', 'सुहुलो', 'सुहुलु', 'सुहुलो', 'सुहुलु', 'सुहुला',
-    'सुहुली', 'सुहुले', 'सुहुली', 'सुहुली', 'सुहुले', 'सुहुली', 'सुहुली', 'सुहुले', 'सुहुली',
-    'सुहुली', 'सुहुली', 'सुहुले', 'सुहुली', 'सुहुली', 'सुहुले', 'सुहुली', 'सुहुली', 'सुहुले',
-    'तारापुर', 'तारातला', 'तारेय', 'तारिकेश', 'तारिकेश पूर', 'तारिकेश पश्चिम', 'तारीख',
-    'ताराखर', 'ताराग़र', 'तारागर', 'तारागरपुर', 'तारागर', 'तारागर', 'तारागर', 'तारागर',
-    'तारागर', 'तारागर', 'तारागर', 'तारागर', 'तारागर', 'तारागर', 'तारागर', 'तारागर'
+    'पटना', 'नालंदा', 'गया', 'भागलपुर', 'मुजफ्फरपुर', 'दरभंगा', 'पूर्णिया', 'मधुबनी',
+    'समस्तीपुर', 'सीतामढ़ी', 'मोतिहारी', 'वैशाली', 'सारण', 'गोपालगंज', 'सिवान', 'कटिहार',
+    'खगड़िया', 'बिहार शरीफ', 'अरवल', 'जहानाबाद', 'औरंगाबाद', 'नवादा', 'बाँका', 'लखीसराय',
+    'शेखपुरा', 'किशनगंज', 'अररिया', 'पूर्व चंपारण', 'पश्चिम चंपारण', 'बेतिया', 'मधेपुरा',
+    'सुपौल', 'महिषासंध', 'जमुई', 'कोडरमा', 'गिरिडीह', 'धनबाद', 'बोकारो', 'देवघर'
 ]
 
 def login_required(f):
@@ -50,8 +26,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@auth_bp.route('/register', methods=['GET', 'POST'])
-def register():
+@auth_bp.route('/register', methods=['GET', 'POST'])\ndef register():
     try:
         if request.method == 'POST':
             full_name = request.form.get('full_name', '').strip()
@@ -64,13 +39,16 @@ def register():
 
             if not all([full_name, shop_name, mobile, email, password, district]):
                 flash('सभी फील्ड भरें।', 'error')
-                return redirect(url_for('auth.register'))
+                return render_template('auth/register.html', districts=BIHAR_DISTRICTS)
 
-            if Operator.query.filter_by(email=email).first():
+            # Check if email already exists
+            existing = Operator.query.filter_by(email=email).first()
+            if existing:
                 flash('यह ईमेल पहले से रजिस्टर है।', 'error')
-                return redirect(url_for('auth.register'))
+                return render_template('auth/register.html', districts=BIHAR_DISTRICTS)
 
             try:
+                # Create new operator
                 operator = Operator(
                     full_name=full_name,
                     shop_name=shop_name,
@@ -82,25 +60,51 @@ def register():
                 )
                 operator.set_password(password)
                 
-                default_plan = Plan.query.filter_by(name='Free Trial').first()
-                if default_plan:
-                    operator.plan_id = default_plan.id
-                    operator.subscription_end = datetime.utcnow() + timedelta(days=30)
+                # Set default plan - Free Trial for 30 days
+                operator.subscription_start = datetime.utcnow()
+                operator.subscription_end = datetime.utcnow() + timedelta(days=30)
                 
                 db.session.add(operator)
+                db.session.flush()  # Get the ID without committing
+                
+                # Create or get Free Trial plan
+                try:
+                    plan = Plan.query.filter_by(name='Free Trial').first()
+                    if not plan:
+                        plan = Plan(
+                            name='Free Trial',
+                            description='30 दिन की निःशुल्क परीक्षा',
+                            monthly_price=0.0,
+                            yearly_price=0.0,
+                            max_customers=100,
+                            max_services=1000,
+                            storage_gb=5,
+                            active=True
+                        )
+                        db.session.add(plan)
+                        db.session.flush()
+                    
+                    operator.plan_id = plan.id
+                except Exception as plan_error:
+                    logger.error(f'Plan creation error: {plan_error}')
+                    pass
+                
                 db.session.commit()
                 
+                logger.info(f'New operator registered: {email}')
                 flash('रजिस्ट्रेशन सफल! अब लॉगिन करें।', 'success')
                 return redirect(url_for('auth.login'))
+                
             except Exception as e:
                 db.session.rollback()
-                logger.error(f'Registration error: {e}')
-                flash('रजिस्ट्रेशन में त्रुटि।', 'error')
-                return redirect(url_for('auth.register'))
+                logger.error(f'Registration error: {str(e)}', exc_info=True)
+                flash(f'रजिस्ट्रेशन में त्रुटि: {str(e)}', 'error')
+                return render_template('auth/register.html', districts=BIHAR_DISTRICTS)
 
         return render_template('auth/register.html', districts=BIHAR_DISTRICTS)
+        
     except Exception as e:
-        logger.error(f'Register page error: {e}')
+        logger.error(f'Register page error: {str(e)}', exc_info=True)
         flash('कोई त्रुटि हुई।', 'error')
         return redirect(url_for('index'))
 
@@ -113,32 +117,38 @@ def login():
 
             if not email or not password:
                 flash('ईमेल और पासवर्ड दोनों दर्ज करें।', 'error')
-                return redirect(url_for('auth.login'))
+                return render_template('auth/login.html')
 
             operator = Operator.query.filter_by(email=email).first()
 
             if operator and operator.check_password(password):
                 if not operator.is_active:
                     flash('आपका खाता निलंबित है।', 'error')
-                    return redirect(url_for('auth.login'))
+                    return render_template('auth/login.html')
 
                 session['operator_id'] = operator.id
                 session['operator_name'] = operator.full_name
                 session['shop_name'] = operator.shop_name
                 operator.last_login = datetime.utcnow()
-                db.session.commit()
+                
+                try:
+                    db.session.commit()
+                except:
+                    db.session.rollback()
 
+                logger.info(f'Operator logged in: {email}')
                 flash(f'स्वागत है, {operator.full_name}!', 'success')
                 return redirect(url_for('dashboard.index'))
             else:
                 flash('गलत ईमेल या पासवर्ड।', 'error')
-                return redirect(url_for('auth.login'))
+                return render_template('auth/login.html')
 
         return render_template('auth/login.html')
+        
     except Exception as e:
-        logger.error(f'Login error: {e}')
+        logger.error(f'Login error: {str(e)}', exc_info=True)
         flash('लॉगिन में त्रुटि।', 'error')
-        return redirect(url_for('auth.login'))
+        return render_template('auth/login.html')
 
 @auth_bp.route('/logout')
 def logout():
