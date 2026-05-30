@@ -8,37 +8,33 @@ class Operator(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(120), nullable=False)
-    shop_name = db.Column(db.String(200), nullable=False, unique=True)
-    mobile = db.Column(db.String(20), nullable=False, unique=True)
+    shop_name = db.Column(db.String(200), nullable=False)
+    mobile = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
     district = db.Column(db.String(100), nullable=False)
     address = db.Column(db.Text)
     
-    # Business info
     gst_number = db.Column(db.String(50))
     registration_number = db.Column(db.String(100))
     
-    # Status
     is_active = db.Column(db.Boolean, default=True)
     is_verified = db.Column(db.Boolean, default=False)
     verification_token = db.Column(db.String(255))
     
-    # Subscription
     plan_id = db.Column(db.Integer, db.ForeignKey('plans.id'))
     subscription_start = db.Column(db.DateTime, default=datetime.utcnow)
     subscription_end = db.Column(db.DateTime)
     
-    # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_login = db.Column(db.DateTime)
     
-    # Relations
     customers = db.relationship('Customer', backref='operator', lazy=True, cascade='all, delete-orphan')
     services = db.relationship('Service', backref='operator', lazy=True, cascade='all, delete-orphan')
     payments = db.relationship('Payment', backref='operator', lazy=True, cascade='all, delete-orphan')
     complaints = db.relationship('Complaint', backref='operator', lazy=True, cascade='all, delete-orphan')
+    notifications = db.relationship('Notification', backref='operator', lazy=True, cascade='all, delete-orphan')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -81,7 +77,6 @@ class Customer(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relations
     services = db.relationship('Service', backref='customer', lazy=True, cascade='all, delete-orphan')
     
     def __repr__(self):
@@ -94,15 +89,12 @@ class Service(db.Model):
     operator_id = db.Column(db.Integer, db.ForeignKey('operators.id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
     
-    # Service details
-    service_type = db.Column(db.String(100), nullable=False)  # Income Certificate, Caste Certificate, etc.
+    service_type = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
-    payment_amount = db.Column(db.Float, nullable=False)
+    payment_amount = db.Column(db.Float, nullable=False, default=0)
     
-    # Status
-    status = db.Column(db.String(50), default='Pending')  # Pending, Submitted, Approved, Rejected, Completed
+    status = db.Column(db.String(50), default='Pending')
     
-    # Dates
     submission_date = db.Column(db.DateTime, default=datetime.utcnow)
     completion_date = db.Column(db.DateTime)
     
@@ -111,7 +103,6 @@ class Service(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relations
     documents = db.relationship('Document', backref='service', lazy=True, cascade='all, delete-orphan')
     payments = db.relationship('Payment', backref='service', lazy=True, cascade='all, delete-orphan')
     
@@ -124,7 +115,7 @@ class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     service_id = db.Column(db.Integer, db.ForeignKey('services.id'), nullable=False)
     
-    document_type = db.Column(db.String(100))  # Aadhaar, PAN, Passport, etc.
+    document_type = db.Column(db.String(100))
     filename = db.Column(db.String(255), nullable=False)
     file_path = db.Column(db.String(500), nullable=False)
     original_name = db.Column(db.String(255))
@@ -141,11 +132,11 @@ class Payment(db.Model):
     operator_id = db.Column(db.Integer, db.ForeignKey('operators.id'), nullable=False)
     service_id = db.Column(db.Integer, db.ForeignKey('services.id'), nullable=False)
     
-    amount = db.Column(db.Float, nullable=False)
-    payment_method = db.Column(db.String(50))  # Cash, UPI, Card, etc.
+    amount = db.Column(db.Float, nullable=False, default=0)
+    payment_method = db.Column(db.String(50), default='Cash')
     transaction_id = db.Column(db.String(200))
     
-    status = db.Column(db.String(50), default='Completed')  # Completed, Pending, Failed
+    status = db.Column(db.String(50), default='Completed')
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -174,7 +165,7 @@ class Notification(db.Model):
     
     title = db.Column(db.String(200), nullable=False)
     message = db.Column(db.Text, nullable=False)
-    notification_type = db.Column(db.String(50))  # info, warning, success, error
+    notification_type = db.Column(db.String(50), default='info')
     
     is_read = db.Column(db.Boolean, default=False)
     
@@ -190,16 +181,14 @@ class Plan(db.Model):
     name = db.Column(db.String(100), nullable=False, unique=True)
     description = db.Column(db.Text)
     
-    # Pricing
-    monthly_price = db.Column(db.Float)
-    yearly_price = db.Column(db.Float)
+    monthly_price = db.Column(db.Float, default=0)
+    yearly_price = db.Column(db.Float, default=0)
     
-    # Features
-    max_customers = db.Column(db.Integer)
-    max_services = db.Column(db.Integer)
-    storage_gb = db.Column(db.Integer)
+    max_customers = db.Column(db.Integer, default=100)
+    max_services = db.Column(db.Integer, default=1000)
+    storage_gb = db.Column(db.Integer, default=5)
     
-    features = db.Column(db.Text)  # JSON string of features
+    features = db.Column(db.Text)
     
     active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -216,7 +205,7 @@ class Complaint(db.Model):
     subject = db.Column(db.String(200), nullable=False)
     message = db.Column(db.Text, nullable=False)
     
-    status = db.Column(db.String(50), default='Open')  # Open, In Progress, Closed
+    status = db.Column(db.String(50), default='Open')
     admin_reply = db.Column(db.Text)
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
