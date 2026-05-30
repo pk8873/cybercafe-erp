@@ -1,132 +1,113 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
-from functools import wraps
+from models import Customer, Operator
 from app import db
-from models import Operator, Customer, Service
-from datetime import datetime
+from functools import wraps
+import logging
 
-customer_bp = Blueprint('customer', __name__, url_prefix='/dashboard/customers')
+logger = logging.getLogger(__name__)
+customer_bp = Blueprint('customer', __name__, url_prefix='/customer')
+
+BIHAR_DISTRICTS = ['पटना', 'नालंदा', 'गया', 'भागलपुर', 'मुजफ्फरपुर', 'दरभंगा', 'पूर्णिया', 'मधुबनी']
 
 def login_required(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
+    def decorated(*args, **kwargs):
         if 'operator_id' not in session:
             return redirect(url_for('auth.login'))
         return f(*args, **kwargs)
-    return decorated_function
+    return decorated
 
-@customer_bp.route('/')
+@customer_bp.route('/list')
 @login_required
-def index():
-    operator = Operator.query.get(session['operator_id'])
-    page = request.args.get('page', 1, type=int)
-    search = request.args.get('search', '')
-    
-    query = Customer.query.filter_by(operator_id=operator.id)
-    
-    if search:
-        query = query.filter(
-            (Customer.full_name.ilike(f'%{search}%')) |
-            (Customer.mobile.ilike(f'%{search}%')) |
-            (Customer.aadhaar_last4.ilike(f'%{search}%'))
-        )
-    
-    customers = query.order_by(Customer.created_at.desc()).paginate(page=page, per_page=20)
-    
-    return render_template('dashboard/customers/list.html',
-                         customers=customers,
-                         search=search)
+def list():
+    try:
+        operator_id = session.get('operator_id')
+        customers = Customer.query.filter_by(operator_id=operator_id).all()
+        return render_template('customer/list.html', customers=customers)
+    except Exception as e:
+        logger.error(f'Customer list error: {e}')
+        flash('त्रुटि: ग्राहक सूची लोड नहीं कर सके।', 'error')
+        return redirect(url_for('dashboard.index'))
 
 @customer_bp.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
-    if request.method == 'POST':
-        operator = Operator.query.get(session['operator_id'])
-        
-        full_name = request.form.get('full_name', '').strip()
-        mobile = request.form.get('mobile', '').strip()
-        aadhaar_last4 = request.form.get('aadhaar_last4', '').strip()
-        address = request.form.get('address', '').strip()
-        village = request.form.get('village', '').strip()
-        district = request.form.get('district', '').strip()
-        notes = request.form.get('notes', '').strip()
-        
-        if not full_name or not mobile:
-            flash('नाम और मोबाइल नंबर दर्ज करें', 'error')
-            return redirect(url_for('customer.add'))
-        
-        customer = Customer(
-            operator_id=operator.id,
-            full_name=full_name,
-            mobile=mobile,
-            aadhaar_last4=aadhaar_last4,
-            address=address,
-            village=village,
-            district=district,
-            notes=notes
-        )
-        
-        db.session.add(customer)
-        db.session.commit()
-        
-        flash('ग्राहक सफलतापूर्वक जोड़ा गया', 'success')
-        return redirect(url_for('customer.index'))
-    
-    return render_template('dashboard/customers/add.html')
+    try:
+        if request.method == 'POST':
+            operator_id = session.get('operator_id')
+            full_name = request.form.get('full_name', '').strip()
+            mobile = request.form.get('mobile', '').strip()
+            aadhaar_last4 = request.form.get('aadhaar_last4', '').strip()
+            address = request.form.get('address', '').strip()
+            village = request.form.get('village', '').strip()
+            district = request.form.get('district', '').strip()
 
-@customer_bp.route('/<int:customer_id>')
-@login_required
-def view(customer_id):
-    customer = Customer.query.get_or_404(customer_id)
-    
-    if customer.operator_id != session.get('operator_id'):
-        flash('आपको यह ग्राहक देखने की अनुमति नहीं है', 'error')
-        return redirect(url_for('customer.index'))
-    
-    services = Service.query.filter_by(customer_id=customer_id).order_by(
-        Service.created_at.desc()
-    ).all()
-    
-    return render_template('dashboard/customers/view.html',
-                         customer=customer,
-                         services=services)
+            if not full_name or not mobile:
+                flash('नाम और मोबाइल दोनों आवश्यक हैं।', 'error')
+                return redirect(url_for('customer.add'))
 
-@customer_bp.route('/<int:customer_id>/edit', methods=['GET', 'POST'])
-@login_required
-def edit(customer_id):
-    customer = Customer.query.get_or_404(customer_id)
-    
-    if customer.operator_id != session.get('operator_id'):
-        flash('आपको यह ग्राहक संपादित करने की अनुमति नहीं है', 'error')
-        return redirect(url_for('customer.index'))
-    
-    if request.method == 'POST':
-        customer.full_name = request.form.get('full_name', '').strip()
-        customer.mobile = request.form.get('mobile', '').strip()
-        customer.aadhaar_last4 = request.form.get('aadhaar_last4', '').strip()
-        customer.address = request.form.get('address', '').strip()
-        customer.village = request.form.get('village', '').strip()
-        customer.district = request.form.get('district', '').strip()
-        customer.notes = request.form.get('notes', '').strip()
-        customer.updated_at = datetime.utcnow()
-        
-        db.session.commit()
-        
-        flash('ग्राहक सफलतापूर्वक अपडेट किया गया', 'success')
-        return redirect(url_for('customer.view', customer_id=customer_id))
-    
-    return render_template('dashboard/customers/edit.html', customer=customer)
+            try:
+                customer = Customer(
+                    operator_id=operator_id,
+                    full_name=full_name,
+                    mobile=mobile,
+                    aadhaar_last4=aadhaar_last4,
+                    address=address,
+                    village=village,
+                    district=district
+                )
+                db.session.add(customer)
+                db.session.commit()
+                flash('ग्राहक जोड़ा गया।', 'success')
+                return redirect(url_for('customer.list'))
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f'Add customer error: {e}')
+                flash('ग्राहक जोड़ने में त्रुटि।', 'error')
+                return redirect(url_for('customer.add'))
 
-@customer_bp.route('/<int:customer_id>/delete', methods=['POST'])
+        return render_template('customer/add.html', districts=BIHAR_DISTRICTS)
+    except Exception as e:
+        logger.error(f'Customer add page error: {e}')
+        flash('त्रुटि', 'error')
+        return redirect(url_for('dashboard.index'))
+
+@customer_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete(customer_id):
-    customer = Customer.query.get_or_404(customer_id)
-    
-    if customer.operator_id != session.get('operator_id'):
-        flash('आपको यह ग्राहक हटाने की अनुमति नहीं है', 'error')
-        return redirect(url_for('customer.index'))
-    
-    db.session.delete(customer)
-    db.session.commit()
-    
-    flash('ग्राहक सफलतापूर्वक हटाया गया', 'success')
-    return redirect(url_for('customer.index'))
+def edit(id):
+    try:
+        customer = Customer.query.get(id)
+        if not customer or customer.operator_id != session.get('operator_id'):
+            return redirect(url_for('customer.list'))
+
+        if request.method == 'POST':
+            customer.full_name = request.form.get('full_name', '').strip()
+            customer.mobile = request.form.get('mobile', '').strip()
+            customer.address = request.form.get('address', '').strip()
+            customer.district = request.form.get('district', '').strip()
+            customer.village = request.form.get('village', '').strip()
+            
+            db.session.commit()
+            flash('ग्राहक अपडेट किया गया।', 'success')
+            return redirect(url_for('customer.list'))
+
+        return render_template('customer/edit.html', customer=customer, districts=BIHAR_DISTRICTS)
+    except Exception as e:
+        logger.error(f'Edit customer error: {e}')
+        flash('त्रुटि', 'error')
+        return redirect(url_for('customer.list'))
+
+@customer_bp.route('/delete/<int:id>')
+@login_required
+def delete(id):
+    try:
+        customer = Customer.query.get(id)
+        if customer and customer.operator_id == session.get('operator_id'):
+            db.session.delete(customer)
+            db.session.commit()
+            flash('ग्राहक हटा दिया गया।', 'success')
+        return redirect(url_for('customer.list'))
+    except Exception as e:
+        logger.error(f'Delete customer error: {e}')
+        flash('ग्राहक हटाने में त्रुटि।', 'error')
+        return redirect(url_for('customer.list'))

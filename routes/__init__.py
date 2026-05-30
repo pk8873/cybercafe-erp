@@ -1,11 +1,11 @@
-from .auth import auth_bp
-from .dashboard import dashboard_bp
-from .customer import customer_bp
-from .service import service_bp
-from .admin import admin_bp
-from .pdf_tools import pdf_tools_bp
-from .reports import reports_bp
-from .api import api_bp
+from routes.auth import auth_bp
+from routes.dashboard import dashboard_bp
+from routes.customer import customer_bp
+from routes.service import service_bp
+from routes.admin import admin_bp
+from routes.pdf_tools import pdf_tools_bp
+from routes.reports import reports_bp
+from routes.api import api_bp
 
 __all__ = [
     'auth_bp',
